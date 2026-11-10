@@ -1,0 +1,20 @@
+@startuml
+actor 买家
+participant "前端页面" as UI
+participant "预约服务" as Service
+database "数据库" as DB
+
+买家 -> UI : 点击"预约"按钮
+UI -> Service : 发起预约请求(商品ID, 买家ID)
+Service -> DB : 查询商品当前状态
+alt 商品状态为"在售"
+    Service -> DB : 开启事务，插入预约记录
+    Service -> DB : 更新商品状态为"已预订"
+    DB --> Service : 更新成功
+    Service --> UI : 返回预约成功
+    UI --> 买家 : 提示"预约成功"
+else 商品已被他人预订/下架
+    Service --> UI : 返回错误提示
+    UI --> 买家 : 提示"手慢了，商品已被预订"并刷新页面
+end
+@enduml

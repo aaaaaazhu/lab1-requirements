@@ -1,0 +1,34 @@
+@startuml
+class User {
+  - String userId
+  - String username
+  - String role (买家/卖家/管理员)
+  + login()
+  + register()
+}
+
+class Product {
+  - String productId
+  - String title
+  - Double price
+  - String status (草稿/待审核/在售/已预订/已售出/违规下架)
+  - String sellerId
+  + submitForReview()
+  + updateStatus()
+}
+
+class Reservation {
+  - String reservationId
+  - String buyerId
+  - String productId
+  - Date createTime
+  - String status (有效/已取消)
+  + createReservation()
+  + cancelReservation()
+}
+
+User "1" -- "0..*" Product : 发布 >
+User "1" -- "0..*" Reservation : 发起 >
+Product "1" -- "0..1" Reservation : 绑定 > 
+note right of Reservation: 商品只能有一条有效预约
+@enduml
